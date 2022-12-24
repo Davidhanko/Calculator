@@ -4,42 +4,55 @@ let numbers = [5,4]
 //declaring basic operation functions
 
 //function sum
-function doAdd(numbers){
-    const sum = numbers.reduce((total, next)=> total + next, 0)
+function doAdd(a,b){
+    const sum = a+b
     console.log(sum)
     return sum
 }
 
 //function substract
-function doSubstract(numbers){
-    const substract = numbers.reduce((total,next) => total - next,0)
+function doSubstract(a,b){
+    const substract = a-b
     console.log(substract)
+    return substract
 }
 
 //function multiply
-function doMultiply(numbers){
-    const multiply = numbers.reduce((total,next)=> total * next, 1)
+function doMultiply(a,b){
+    const multiply = a*b
     console.log(multiply)
+    return multiply
 }
 
 //function divide, not allowing with 0
-function doDivide(numbers) {
+function doDivide(a,b) {
     let hasZero = false;
-    numbers.forEach(number => {
-        if (number === 0) {
+        if (a === 0 || b === 0) {
             hasZero = true;
         }
-    });
     if (hasZero) {
-        return console.log("Cannot divide by 0");
+        return console.log("Cannot divide by 0")
     }
-    const divide = numbers.reduce((total, next) => total / next,);
+    const divide = a/b
     console.log(divide)
-    return divide;
+    return divide
 }
 
-//testing operations
-doAdd(numbers)
-doSubstract(numbers)
-doMultiply(numbers)
-doDivide(numbers)
+//function operate, main core of the calculator, takes 2 numbers and the symbol between them
+function doOperate(numbers){
+    let a = numbers[0], b = numbers[1]
+    console.log(a,b)
+    let symbol = prompt("What operation do you want to do?", "")
+    switch (symbol){
+        case "+":
+            return doAdd(a,b)
+        case "-":
+            return doSubstract(a,b)
+        case "/":
+            return doDivide(a,b)
+        case "*":
+            return doMultiply(a,b)
+        default: return console.log("wrong operator")
+    }
+}
+doOperate(numbers)
