@@ -55,4 +55,4 @@ function doOperate(numbers){
         default: return console.log("wrong operator")
     }
 }
-doOperate(numbers)
+// doOperate(numbers)
