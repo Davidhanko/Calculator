@@ -1,10 +1,14 @@
 let numbers = [5,4]
-
-
+const BUTTONS = document.querySelectorAll("button")
+const DISPLAY = document.querySelector(".paraDisplay")
+let oldText = ""
+let newText = ""
 //declaring basic operation functions
 
 //function sum
 function doAdd(a,b){
+    a = Number(a)
+    b = Number(b)
     const sum = a+b
     console.log(sum)
     return sum
@@ -39,10 +43,7 @@ function doDivide(a,b) {
 }
 
 //function operate, main core of the calculator, takes 2 numbers and the symbol between them
-function doOperate(numbers){
-    let a = numbers[0], b = numbers[1]
-    console.log(a,b)
-    let symbol = prompt("What operation do you want to do?", "")
+function doOperate(a, b, symbol){
     switch (symbol){
         case "+":
             return doAdd(a,b)
@@ -55,4 +56,54 @@ function doOperate(numbers){
         default: return console.log("wrong operator")
     }
 }
+
+function updateText(text){
+    oldText = newText
+    newText = `${oldText}${text}`
+    if(text === "+")
+    {
+        DISPLAY.textContent = doOperate(oldText, newText, text)
+    }
+        else
+    {
+        let newText = `${oldText}${text}`
+        oldText = newText
+        DISPLAY.textContent = newText
+    }
+}
+
+//function that checks and prints out the symbol on the display
+function getInfo(button){
+    let statement = button.innerText
+    switch (statement){
+        case "1": updateText(statement);break;
+        case "2": updateText(statement);break;
+        case "3": updateText(statement);break;
+        case "4": updateText(statement);break;
+        case "5": updateText(statement);break;
+        case "6": updateText(statement);break;
+        case "7": updateText(statement);break;
+        case "8": updateText(statement);break;
+        case "9": updateText(statement);break;
+        case "0": updateText(statement);break;
+        case ".": updateText(statement);break;
+        case "+": updateText(statement);break;
+        case "-": updateText(statement);break;
+        case "*": updateText(statement);break;
+        case "=": updateText(statement);break;
+        case "+-": updateText(statement);break;
+        case "clear": updateText(statement);break;
+        case "%": updateText(statement);break;
+        case "/": updateText(statement);break;
+        default: console.log("ERROR"); break;
+    }
+}
+
+// assigning event listener to each button
+BUTTONS.forEach( button =>{
+    button.addEventListener("click", function() {
+        getInfo.apply(this, [button]);
+    });
+})
+
 // doOperate(numbers)
