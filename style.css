@@ -17,11 +17,16 @@
     flex-wrap: wrap;
     width: 500px;
 }
+.zero{
+    flex: 1;
+}
 .display{
     background: gray;
     width: 500px;
     text-align: right;
+    height: 100px;
 }
+
 button{
     height: 100px;
     width: 125px;
