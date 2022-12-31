@@ -11,8 +11,9 @@ function doAdd(a,b){
     a = Number(a)
     b = Number(b)
     const sum = a+b
-    newText = sum
-    return sum
+    const rounded = sum.toFixed(3)
+    newText = rounded
+    return rounded
 }
 
 //function substract
@@ -20,8 +21,9 @@ function doSubstract(a,b){
     a = Number(a)
     b = Number(b)
     const substract = a-b
-    newText = substract.toString()
-    return substract
+    const rounded = substract.toFixed(3)
+    newText = rounded.toString()
+    return rounded
 }
 
 //function multiply
@@ -29,8 +31,9 @@ function doMultiply(a,b){
     a = Number(a)
     b = Number(b)
     const multiply = a*b
-    newText = multiply
-    return multiply
+    const rounded = multiply.toFixed(3)
+    newText = rounded
+    return rounded
 }
 
 //function divide, not allowing with 0
@@ -45,16 +48,17 @@ function doDivide(a,b) {
         return DISPLAY.textContent = "Cannot divide with 0"
     }
     const divide = a/b
-    newText = divide
-    return divide
+    const rounded = divide.toFixed(3)
+    newText = rounded
+    return rounded
 }
 
 //function percentage, divides original number by 100 and then multiplies by second number
 function doPercentage(a,b){
     a = Number(a)
     b = Number(b)
-    newText = ((a-b)/a)*100
-    return ((a-b)/a)*100
+    newText = (((a-b)/a)*100).toFixed(3)
+    return (((a-b)/a)*100).toFixed(3)
 }
 
 function updateText(text){
