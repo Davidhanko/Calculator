@@ -2,6 +2,7 @@ let numbers = [5,4]
 const BUTTONS = document.querySelectorAll("button")
 const DISPLAY = document.querySelector(".paraDisplay")
 let oldText = ""
+let operator = ""
 let newText = ""
 //declaring basic operation functions
 
@@ -10,66 +11,55 @@ function doAdd(a,b){
     a = Number(a)
     b = Number(b)
     const sum = a+b
-    console.log(sum)
+    newText = sum
     return sum
 }
 
 //function substract
 function doSubstract(a,b){
+    a = Number(a)
+    b = Number(b)
     const substract = a-b
-    console.log(substract)
+    newText = substract.toString()
     return substract
 }
 
 //function multiply
 function doMultiply(a,b){
+    a = Number(a)
+    b = Number(b)
     const multiply = a*b
-    console.log(multiply)
+    newText = multiply
     return multiply
 }
 
 //function divide, not allowing with 0
 function doDivide(a,b) {
+    a = Number(a)
+    b = Number(b)
     let hasZero = false;
         if (a === 0 || b === 0) {
             hasZero = true;
         }
     if (hasZero) {
-        return console.log("Cannot divide by 0")
+        return DISPLAY.textContent = "Cannot divide with 0"
     }
     const divide = a/b
-    console.log(divide)
+    newText = divide
     return divide
 }
 
-//function operate, main core of the calculator, takes 2 numbers and the symbol between them
-function doOperate(a, b, symbol){
-    switch (symbol){
-        case "+":
-            return doAdd(a,b)
-        case "-":
-            return doSubstract(a,b)
-        case "/":
-            return doDivide(a,b)
-        case "*":
-            return doMultiply(a,b)
-        default: return console.log("wrong operator")
-    }
+//function percentage, divides original number by 100 and then multiplies by second number
+function doPercentage(a,b){
+    a = Number(a)
+    b = Number(b)
+    newText = ((a-b)/a)*100
+    return ((a-b)/a)*100
 }
 
 function updateText(text){
-    oldText = newText
-    newText = `${oldText}${text}`
-    if(text === "+")
-    {
-        DISPLAY.textContent = doOperate(oldText, newText, text)
-    }
-        else
-    {
-        let newText = `${oldText}${text}`
-        oldText = newText
-        DISPLAY.textContent = newText
-    }
+    newText += text
+    DISPLAY.textContent = newText
 }
 
 //function that checks and prints out the symbol on the display
@@ -87,14 +77,56 @@ function getInfo(button){
         case "9": updateText(statement);break;
         case "0": updateText(statement);break;
         case ".": updateText(statement);break;
-        case "+": updateText(statement);break;
-        case "-": updateText(statement);break;
-        case "*": updateText(statement);break;
-        case "=": updateText(statement);break;
-        case "+-": updateText(statement);break;
-        case "clear": updateText(statement);break;
-        case "%": updateText(statement);break;
-        case "/": updateText(statement);break;
+        case "+": operator = "+"
+                oldText=newText
+                DISPLAY.textContent = operator
+                newText=""
+                break;
+        case "-": operator = "-"
+                oldText=newText
+                DISPLAY.textContent = operator
+                newText=""
+                break;
+        case "*": operator = "*"
+                oldText=newText
+                DISPLAY.textContent = operator
+                newText=""
+                break;
+        case "/": operator = "/"
+                oldText=newText
+                DISPLAY.textContent = operator
+                newText=""
+                break;
+        case "%": operator = "%"
+                oldText=newText
+                DISPLAY.textContent = operator
+                newText=""
+                break;
+        case "=": switch (operator){
+                    case "+": DISPLAY.textContent = String(doAdd(oldText, newText));operator="";break;
+                    case "-": DISPLAY.textContent = String(doSubstract(oldText, newText));operator="";break;
+                    case "*": DISPLAY.textContent = String(doMultiply(oldText, newText));operator="";break;
+                    case "/": DISPLAY.textContent = String(doDivide(oldText, newText));operator="";break;
+                    case "%": DISPLAY.textContent = String(doPercentage(oldText, newText));operator="";break;
+            default: DISPLAY.textContent = "No operator was entered.";break;
+
+
+        }
+                break;
+        case "+-": if (newText.charAt(0) === "-") {
+            newText = newText.replace("-", "");
+            DISPLAY.textContent = newText
+        }
+            else{
+                newText = `-${newText}`
+            DISPLAY.textContent = newText
+        }
+        break;
+        case "clear":operator = ""
+                    oldText = ""
+                    newText = ""
+                    DISPLAY.textContent = newText
+            break;
         default: console.log("ERROR"); break;
     }
 }
