@@ -31,3 +31,8 @@ button{
     height: 100px;
     width: 125px;
 }
+.paraDisplay{
+    font-size: 50px;
+    color: white;
+    padding: 17px;
+}
