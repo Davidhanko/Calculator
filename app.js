@@ -58,8 +58,9 @@ function doDivide(a,b) {
 function doPercentage(a,b){
     a = Number(a)
     b = Number(b)
-    newText = Math.floor(((a-b)/a)*1000)/1000
-    return Math.floor(((a-b)/a)*1000)/1000
+    const percentage = b/(a/100)
+    newText = Math.floor((percentage*1000)/1000)
+    return Math.floor((percentage*1000)/1000)
 }
 
 function updateText(text){
@@ -167,18 +168,68 @@ function getInfo(button){
     }
 }
 document.addEventListener("keydown", event => {
-    switch (event.keyCode) {
-        case(48):updateText(String.fromCharCode(event.keyCode));break;
-        case(49):updateText(String.fromCharCode(event.keyCode));break;
-        case(50):updateText(String.fromCharCode(event.keyCode));break;
-        case(51):updateText(String.fromCharCode(event.keyCode));break;
-        case(52):updateText(String.fromCharCode(event.keyCode));break;
-        case(53):updateText(String.fromCharCode(event.keyCode));break;
-        case(54):updateText(String.fromCharCode(event.keyCode));break;
-        case(55):updateText(String.fromCharCode(event.keyCode));break;
-        case(56):updateText(String.fromCharCode(event.keyCode));break;
-        case(57):updateText(String.fromCharCode(event.keyCode));break;
-        case(8):newText = newText.slice(0,-1);DISPLAY.textContent=newText;break;
+    switch (event.key) {
+        case("0"):updateText("0");break;
+        case("1"):updateText("1");break;
+        case("2"):updateText("2");break;
+        case("3"):updateText("3");break;
+        case("4"):updateText("4");break;
+        case("5"):updateText("5");break;
+        case("6"):updateText("6");break;
+        case("7"):updateText("7");break;
+        case("8"):updateText("8");break;
+        case("9"):updateText("9");break;
+        case("Backspace"):newText = newText.slice(0,-1);
+                DISPLAY.textContent=newText;
+                break;
+        case("Delete"):operator = "" // delete
+            oldOperator=""
+            oldText = ""
+            newText = ""
+            DOT.disabled = false
+            DISPLAY.textContent = newText
+            break;
+        case("."):if (newText.includes(".")){ //dot
+            return
+            }
+            else updateText(".")
+            break;
+        case("="):doCalculate(operator);break;
+        case("-"):operator = "-"
+            doCalculate(oldOperator)
+            oldText=newText
+            DISPLAY.textContent = operator
+            newText=""
+            oldOperator=operator
+            break;
+        case ("/"):operator = "/"
+            doCalculate(oldOperator)
+            oldText=newText
+            DISPLAY.textContent = operator
+            newText=""
+            oldOperator=operator
+            break;
+        case ("+"):operator = "+"
+            doCalculate(oldOperator)
+            oldText=newText
+            DISPLAY.textContent = operator
+            newText=""
+            oldOperator=operator
+            break;
+        case ("*"):operator = "*"
+            doCalculate(oldOperator)
+            oldText=newText
+            DISPLAY.textContent = operator
+            newText=""
+            oldOperator=operator
+            break;
+        case ("%"):operator = "%"
+            doCalculate(oldOperator)
+            oldText=newText
+            DISPLAY.textContent = operator
+            newText=""
+            oldOperator=operator
+            break;
     }
 });
 // assigning event listener to each button
