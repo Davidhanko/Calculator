@@ -1,240 +1,187 @@
 const BUTTONS = document.querySelectorAll("button")
 const DISPLAY = document.querySelector(".paraDisplay")
 const DOT = document.querySelector(".dot")
-let oldText = ""
+let firstDigit = ""
+let secondDigit = ""
+
 let operator = ""
-let newText = ""
-let oldOperator = ""
+let displayedTextValue = ""
+
+// List of operators
+const OPERATORS = ["+", "-", "*", "/", "%"]
+
 //declaring basic operation functions
 
 //function sum
 function doAdd(a,b){
     a = Number(a)
     b = Number(b)
-    const sum = a+b
-    const rounded = Math.floor(sum*1000)/1000
-    newText = rounded
-    return rounded
+    return a+b
 }
 
 //function substract
 function doSubstract(a,b){
     a = Number(a)
     b = Number(b)
-    const substract = a-b
-    const rounded = Math.floor(substract*1000)/1000
-    newText = rounded.toString()
-    return rounded
+    return a-b
 }
 
 //function multiply
 function doMultiply(a,b){
     a = Number(a)
     b = Number(b)
-    const multiply = a*b
-    const rounded = Math.floor(multiply*1000)/1000
-    newText = rounded
-    return rounded
+
+    return a*b
 }
 
 //function divide, not allowing with 0
 function doDivide(a,b) {
     a = Number(a)
     b = Number(b)
-    let hasZero = false;
-        if (a === 0 || b === 0) {
-            hasZero = true;
-        }
+
+    let hasZero = a === 0 || b === 0;
+
     if (hasZero) {
-        return DISPLAY.textContent = "Can not divide with 0"
+        return "ERROR";
     }
-    const divide = a/b
-    const rounded = Math.floor(divide*1000)/1000
-    newText = rounded
-    return rounded
+
+    return a/b
 }
 
 //function percentage, divides original number by 100 and then multiplies by second number
 function doPercentage(a,b){
     a = Number(a)
     b = Number(b)
-    const percentage = b/(a/100)
-    newText = Math.floor((percentage*1000)/1000)
-    return Math.floor((percentage*1000)/1000)
+    return b/(a/100)
 }
 
 function updateText(text){
-    newText += text
-    DISPLAY.textContent = newText
-    if (newText.includes(".")){
+    secondDigit += text
+    DISPLAY.textContent = secondDigit
+    if (secondDigit.includes(".")){
         DOT.setAttribute("disabled","")
     }
     else DOT.disabled = false
-    if(newText.length >15) {
-        newText = newText.substring(0, 18)
+    if(secondDigit.length >15) {
+        secondDigit = secondDigit.substring(0, 16)
     }
 }
 //function that calculates
 function doCalculate(operator){
+    console.log("firstDigit: " + firstDigit + " secondDigit: " + secondDigit + " operator: " + operator)
     switch (operator) {
-    case "+": DISPLAY.textContent = String(doAdd(oldText, newText));
+    case "+": DISPLAY.textContent = String(doAdd(firstDigit, secondDigit));
     operator="";
     break;
-    case "-": DISPLAY.textContent = String(doSubstract(oldText, newText));
+    case "-": DISPLAY.textContent = String(doSubstract(firstDigit, secondDigit));
     operator="";
     break;
-    case "*": DISPLAY.textContent = String(doMultiply(oldText, newText));
+    case "*": DISPLAY.textContent = String(doMultiply(firstDigit, secondDigit));
     operator="";
     break;
-    case "/": DISPLAY.textContent = String(doDivide(oldText, newText));
+    case "/": DISPLAY.textContent = String(doDivide(firstDigit, secondDigit));
     operator="";
     break;
-    case "%": DISPLAY.textContent = String(doPercentage(oldText, newText));
+    case "%": DISPLAY.textContent = String(doPercentage(firstDigit, secondDigit));
     operator="";
     break;
-    default: DISPLAY.textContent = "No operator was entered.";
+    default: DISPLAY.textContent = "ERROR - Unknown operator: " + operator;
     break;
     }
 }
 //function that checks and prints out the symbol on the display
 function getInfo(button){
-    let statement = button.innerText
-    switch (statement){
-        case "1": updateText(statement);break;
-        case "2": updateText(statement);break;
-        case "3": updateText(statement);break;
-        case "4": updateText(statement);break;
-        case "5": updateText(statement);break;
-        case "6": updateText(statement);break;
-        case "7": updateText(statement);break;
-        case "8": updateText(statement);break;
-        case "9": updateText(statement);break;
-        case "0": updateText(statement);break;
-        case ".": updateText(statement);break;
-        case "+": operator = "+"
-                doCalculate(oldOperator)
-                oldText=newText
-                DISPLAY.textContent = operator
-                newText=""
-                oldOperator=operator
-                break;
-        case "-": operator = "-"
-            doCalculate(oldOperator)
-            oldText=newText
-                DISPLAY.textContent = operator
-                newText=""
-            oldOperator=operator
-            break;
-        case "*": operator = "*"
-            doCalculate(oldOperator)
-            oldText=newText
-                DISPLAY.textContent = operator
-                newText=""
-            oldOperator=operator
-            break;
-        case "/": operator = "/"
-            doCalculate(oldOperator)
-            oldText=newText
-                DISPLAY.textContent = operator
-                newText=""
-            oldOperator=operator
-            break;
-        case "%": operator = "%"
-            doCalculate(oldOperator)
-            oldText=newText
-                DISPLAY.textContent = operator
-                newText=""
-            oldOperator=operator
-            break;
-        case "=":doCalculate(operator)
-                break;
-        case "+-": if (newText.charAt(0) === "-") {
-            newText = newText.replace("-", "");
-            DISPLAY.textContent = newText
-        }
-            else{
-                newText = `-${newText}`
-            DISPLAY.textContent = newText
-        }
-        break;
-        case "clear":operator = ""
-                    oldOperator=""
-                    oldText = ""
-                    newText = ""
-                    DOT.disabled = false
-                    DISPLAY.textContent = newText
-            break;
-        default: console.log("ERROR"); break;
-    }
+    handleSymbol(button.innerText)
 }
+
 document.addEventListener("keydown", event => {
-    switch (event.key) {
-        case("0"):updateText("0");break;
-        case("1"):updateText("1");break;
-        case("2"):updateText("2");break;
-        case("3"):updateText("3");break;
-        case("4"):updateText("4");break;
-        case("5"):updateText("5");break;
-        case("6"):updateText("6");break;
-        case("7"):updateText("7");break;
-        case("8"):updateText("8");break;
-        case("9"):updateText("9");break;
-        case("Backspace"):newText = newText.slice(0,-1);
-                DISPLAY.textContent=newText;
-                break;
-        case("Delete"):operator = "" // delete
-            oldOperator=""
-            oldText = ""
-            newText = ""
-            DOT.disabled = false
-            DISPLAY.textContent = newText
-            break;
-        case("."):if (newText.includes(".")){ //dot
-            return
-            }
-            else updateText(".")
-            break;
-        case("="):doCalculate(operator);break;
-        case("-"):operator = "-"
-            doCalculate(oldOperator)
-            oldText=newText
-            DISPLAY.textContent = operator
-            newText=""
-            oldOperator=operator
-            break;
-        case ("/"):operator = "/"
-            doCalculate(oldOperator)
-            oldText=newText
-            DISPLAY.textContent = operator
-            newText=""
-            oldOperator=operator
-            break;
-        case ("+"):operator = "+"
-            doCalculate(oldOperator)
-            oldText=newText
-            DISPLAY.textContent = operator
-            newText=""
-            oldOperator=operator
-            break;
-        case ("*"):operator = "*"
-            doCalculate(oldOperator)
-            oldText=newText
-            DISPLAY.textContent = operator
-            newText=""
-            oldOperator=operator
-            break;
-        case ("%"):operator = "%"
-            doCalculate(oldOperator)
-            oldText=newText
-            DISPLAY.textContent = operator
-            newText=""
-            oldOperator=operator
-            break;
-    }
+   handleSymbol(event.key)
 });
+
 // assigning event listener to each button
 BUTTONS.forEach( button =>{
     button.addEventListener("click", function() {
         getInfo.apply(this, [button]);
     });
 })
+
+
+function handleSymbol(symbol) {
+
+    // Check if the key pressed is a number
+    if (symbol >= 0 && symbol <= 9) {
+        handleNumber(symbol)
+    }
+
+    else if (OPERATORS.includes(symbol)) {
+        operator = symbol
+
+        DISPLAY.textContent = operator
+    }
+
+    else{
+        switch (symbol) {
+            case("Backspace"):
+
+                if (secondDigit[secondDigit.length - 1] === "."){
+                    DOT.disabled = false;
+                }
+
+                secondDigit = secondDigit.slice(0,-1);
+                DISPLAY.textContent=secondDigit;
+
+                break;
+            case("Delete"):operator = "" // delete
+                firstDigit = ""
+                secondDigit = ""
+                DOT.disabled = false
+                DISPLAY.textContent = secondDigit
+                break;
+            case("."):if (secondDigit.includes(".")){ //dot
+                return
+            }
+            else updateText(".")
+                break;
+            case("="):
+                doCalculate(operator);
+                firstDigit = secondDigit
+                break;
+
+            case "+-":
+                if (secondDigit.charAt(0) === "-") {
+
+                    DISPLAY.textContent = secondDigit
+                }
+
+                break;
+
+            case "clear":
+                operator = ""
+                firstDigit = 0
+                secondDigit = ""
+                DOT.disabled = false
+                DISPLAY.textContent = "0"
+
+                break;
+
+            default:
+                console.log("ERROR - Unknown symbol: " + symbol);
+                break;
+        }
+    }
+
+    function handleNumber(number) {
+
+        if (firstDigit === "") {
+            firstDigit = number
+            DISPLAY.textContent = firstDigit
+        }
+
+        else if (operator === "") {
+            secondDigit = number
+            DISPLAY.textContent = secondDigit
+        }
+    }
+
+
+}
