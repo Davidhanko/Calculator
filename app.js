@@ -1,47 +1,33 @@
 const BUTTONS = document.querySelectorAll("button")
 const DISPLAY = document.querySelector(".paraDisplay")
-const DOT = document.querySelector(".dot")
+
 let firstDigit = ""
 let secondDigit = ""
 
 let operator = ""
-let displayedTextValue = ""
 
 // List of operators
 const OPERATORS = ["+", "-", "*", "/", "%"]
 
-//declaring basic operation functions
 
 //function sum
 function doAdd(a,b){
-    a = Number(a)
-    b = Number(b)
-    return a+b
+    return a + b
 }
 
 //function substract
 function doSubstract(a,b){
-    a = Number(a)
-    b = Number(b)
-    return a-b
+    return a - b
 }
 
 //function multiply
 function doMultiply(a,b){
-    a = Number(a)
-    b = Number(b)
-
-    return a*b
+    return a * b
 }
 
 //function divide, not allowing with 0
 function doDivide(a,b) {
-    a = Number(a)
-    b = Number(b)
-
-    let hasZero = a === 0 || b === 0;
-
-    if (hasZero) {
+    if (b === 0) {
         return "ERROR";
     }
 
@@ -50,44 +36,93 @@ function doDivide(a,b) {
 
 //function percentage, divides original number by 100 and then multiplies by second number
 function doPercentage(a,b){
-    a = Number(a)
-    b = Number(b)
-    return b/(a/100)
+    return (a/100)*b
 }
 
-function updateText(text){
-    secondDigit += text
-    DISPLAY.textContent = secondDigit
-    if (secondDigit.includes(".")){
-        DOT.setAttribute("disabled","")
+function handleBackspace() {
+    if (isSecondNumSet()) {
+        SetSecondNum(secondDigit.slice(0, -1))
     }
-    else DOT.disabled = false
-    if(secondDigit.length >15) {
-        secondDigit = secondDigit.substring(0, 16)
+    else if (isOperatorSet()) {
+        SetOperator("")
+    }
+    else if (isFirstNumSet()) {
+        SetFirstNum(firstDigit.slice(0, -1))
     }
 }
+
+function handleClear() {
+    SetFirstNum("")
+    SetSecondNum("")
+    SetOperator("")
+}
+
+function handleDot() {
+    if (isSecondNumSet()) {
+        if (!secondDigit.includes(".")) {
+            secondDigit += "."
+        }
+    }
+    else if (isFirstNumSet()) {
+        if (!firstDigit.includes(".")) {
+            firstDigit += "."
+        }
+    }
+}
+
+function handleSignSwitch() {
+    if (isSecondNumSet()) {
+        if (secondDigit.charAt(0) === "-") {
+            secondDigit = secondDigit.slice(1)
+        }
+        else {
+            secondDigit = "-" + secondDigit
+        }
+    }
+    else if (isFirstNumSet()) {
+        if (firstDigit.charAt(0) === "-") {
+            firstDigit = firstDigit.slice(1)
+        }
+        else {
+            firstDigit = "-" + firstDigit
+        }
+    }
+}
+
 //function that calculates
 function doCalculate(operator){
-    console.log("firstDigit: " + firstDigit + " secondDigit: " + secondDigit + " operator: " + operator)
+    let result = 0
+
+    //Converts the string to a number
+    let firstNum = Number(firstDigit)
+    let secondNum = Number(secondDigit)
+
     switch (operator) {
-    case "+": DISPLAY.textContent = String(doAdd(firstDigit, secondDigit));
-    operator="";
-    break;
-    case "-": DISPLAY.textContent = String(doSubstract(firstDigit, secondDigit));
-    operator="";
-    break;
-    case "*": DISPLAY.textContent = String(doMultiply(firstDigit, secondDigit));
-    operator="";
-    break;
-    case "/": DISPLAY.textContent = String(doDivide(firstDigit, secondDigit));
-    operator="";
-    break;
-    case "%": DISPLAY.textContent = String(doPercentage(firstDigit, secondDigit));
-    operator="";
-    break;
-    default: DISPLAY.textContent = "ERROR - Unknown operator: " + operator;
-    break;
+        case "+":
+            result = doAdd(firstNum, secondNum)
+            break;
+
+        case "-":
+            result = doSubstract(firstNum, secondNum)
+            break;
+
+        case "*":
+            result = doMultiply(firstNum, secondNum)
+            break;
+
+        case "/":
+            result = doDivide(firstNum, secondNum)
+            break;
+
+        case "%":
+            result = doPercentage(firstNum, secondNum)
+            break;
     }
+
+    SetFirstNum(result)
+    SetSecondNum("")
+    SetOperator("")
+
 }
 //function that checks and prints out the symbol on the display
 function getInfo(button){
@@ -105,83 +140,132 @@ BUTTONS.forEach( button =>{
     });
 })
 
-
 function handleSymbol(symbol) {
 
     // Check if the key pressed is a number
     if (symbol >= 0 && symbol <= 9) {
         handleNumber(symbol)
-    }
-
-    else if (OPERATORS.includes(symbol)) {
-        operator = symbol
-
-        DISPLAY.textContent = operator
+    } else if (OPERATORS.includes(symbol)) {
+        handleOperator(symbol)
     }
 
     else{
         switch (symbol) {
             case("Backspace"):
-
-                if (secondDigit[secondDigit.length - 1] === "."){
-                    DOT.disabled = false;
-                }
-
-                secondDigit = secondDigit.slice(0,-1);
-                DISPLAY.textContent=secondDigit;
-
+                handleBackspace()
                 break;
-            case("Delete"):operator = "" // delete
-                firstDigit = ""
-                secondDigit = ""
-                DOT.disabled = false
-                DISPLAY.textContent = secondDigit
+
+            case("clear"):
+            case("Delete"):
+                handleClear()
                 break;
-            case("."):if (secondDigit.includes(".")){ //dot
-                return
-            }
-            else updateText(".")
+
+            case("."):
+                handleDot()
                 break;
+
             case("="):
                 doCalculate(operator);
-                firstDigit = secondDigit
                 break;
 
             case "+-":
-                if (secondDigit.charAt(0) === "-") {
-
-                    DISPLAY.textContent = secondDigit
-                }
-
+                handleSignSwitch()
                 break;
 
-            case "clear":
-                operator = ""
-                firstDigit = 0
-                secondDigit = ""
-                DOT.disabled = false
-                DISPLAY.textContent = "0"
-
-                break;
-
-            default:
-                console.log("ERROR - Unknown symbol: " + symbol);
-                break;
         }
     }
 
-    function handleNumber(number) {
-
-        if (firstDigit === "") {
-            firstDigit = number
-            DISPLAY.textContent = firstDigit
-        }
-
-        else if (operator === "") {
-            secondDigit = number
-            DISPLAY.textContent = secondDigit
-        }
-    }
-
-
+    UpdateDisplay()
 }
+
+function handleNumber(number) {
+
+        if (canSetFirstNum()) {
+            AppendToFirstNum(number)
+
+        }
+        else if(canSetSecondNum()) {
+            AppendToSecondNum(number)
+        }
+    }
+
+function handleOperator(newOperator) {
+    if (!canSetOperator()) {
+        doCalculate(operator)
+    }
+
+    SetOperator(newOperator)
+}
+
+function isFirstNumSet() {
+    return firstDigit !== ""
+}
+
+function isSecondNumSet() {
+    return secondDigit !== ""
+}
+
+function isOperatorSet() {
+    return operator !== ""
+}
+
+function canSetFirstNum() {
+    return !isOperatorSet() && !isSecondNumSet()
+}
+
+function canSetSecondNum() {
+    return isFirstNumSet() && isOperatorSet()
+}
+
+function canSetOperator() {
+    return isFirstNumSet() && !isOperatorSet() && !isSecondNumSet();
+}
+
+function AppendToFirstNum(number) {
+    firstDigit += number
+}
+
+function AppendToSecondNum(number) {
+    secondDigit += number
+}
+
+function SetFirstNum(num) {
+    firstDigit = num
+}
+
+function SetSecondNum(num) {
+    secondDigit = num
+}
+
+function SetOperator(op) {
+    operator = op
+}
+
+function UpdateDisplay() {
+
+    let displayText = ""
+
+    if (isFirstNumSet()) {
+        displayText += firstDigit
+    }
+
+    if (isOperatorSet()) {
+        displayText += operator
+    }
+
+    if (isSecondNumSet()) {
+        displayText += secondDigit
+    }
+
+    DISPLAY.textContent = displayText
+}
+
+
+
+
+
+
+
+
+
+
